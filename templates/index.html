@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#F0EDF7">
+  <meta name="color-scheme" content="light">
+  <title>Fire &amp; Smoke Vision — AI Detection Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+</head>
+<body data-state="idle">
+  <a class="skip-link" href="#mainStage">Bỏ qua tới khung nhận diện</a>
+
+  <svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+    <symbol id="i-menu" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></g></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></g></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="13.5" height="12" rx="3"/><path d="M16 10.5l5.5-3v9l-5.5-3z"/></g></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></g></symbol>
+    <symbol id="i-film" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 4v16M17 4v16M3 9h4M3 15h4M17 9h4M17 15h4"/></g></symbol>
+    <symbol id="i-history" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 7v5l3 2"/></g></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></g></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></g></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h7M15 6h5M4 12h3M11 12h9M4 18h9M17 18h3"/><circle cx="13" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="15" cy="18" r="2"/></g></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.4M12 18.8v2.4M4.5 7.5l2.1 1.2M17.4 15.3l2.1 1.2M2.8 12h2.4M18.8 12h2.4M4.5 16.5l2.1-1.2M17.4 8.7l2.1-1.2"/></g></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5l11 6.5-11 6.5z" fill="currentColor"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><g fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1.2"/><rect x="14" y="5" width="4" height="14" rx="1.2"/></g></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2.4" fill="currentColor"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></g></symbol>
+    <symbol id="i-expand" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H3v5M16 3h5v5M21 16v5h-5M3 16v5h5"/></g></symbol>
+    <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 2.8c3.2 3.8 5.4 6.2 5.4 9.4a5.4 5.4 0 0 1-10.8 0c0-1.9.9-3.2 2.1-4.4.1 2 .9 3.1 1.9 3.1.2-3 .4-5.2 1.4-8.1z" fill="currentColor"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9M7 14l5-5 5 5M5 3h14"/></g></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 14h10l1-14M10 11v6M14 11v6"/></g></symbol>
+    <symbol id="i-cpu" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2.4"/><rect x="10" y="10" width="4" height="4" rx="1"/><path d="M9 2.8V6M15 2.8V6M9 18v3.2M15 18v3.2M2.8 9H6M2.8 15H6M18 9h3.2M18 15h3.2"/></g></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5L22 20H2z"/><path d="M12 9.5v4.5M12 17.2v.4"/></g></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-sound" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.6a5 5 0 0 1 0 6.8M19 6a8.5 8.5 0 0 1 0 12"/></g></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.4"/></g></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></g></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M9 5.5l7 6.5-7 6.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </svg>
+
+  <div class="app">
+    <main class="stage" id="mainStage" aria-label="Khung nhận diện">
+      <img class="stage__media" id="stream" alt="Luồng video nhận diện trực tiếp từ máy chủ" hidden>
+      <div class="stage__vignette" aria-hidden="true"></div>
+
+      <div class="stage-empty" id="stageEmpty">
+        <div class="empty-card">
+          <span class="empty-card__icon" id="emptyIcon"><svg class="icon"><use href="#i-camera"/></svg></span>
+          <p class="empty-card__eyebrow" id="emptyEyebrow">Sẵn sàng</p>
+          <h1 id="emptyTitle">Fire &amp; Smoke Vision</h1>
+          <p id="emptyText">Bật webcam máy chủ hoặc tải ảnh/video để bắt đầu nhận diện bằng model đã train.</p>
+          <div class="empty-card__actions" id="emptyActions">
+            <button class="btn btn--primary" id="emptyStart" type="button">
+              <svg class="icon"><use href="#i-camera"/></svg><span>Bật webcam</span>
+            </button>
+            <button class="btn btn--onDark" id="emptyMedia" type="button">
+              <svg class="icon"><use href="#i-image"/></svg><span>Ảnh / Video</span>
+            </button>
+          </div>
+          <div class="empty-card__spinner" id="emptySpinner" hidden>
+            <span class="spinner" aria-hidden="true"></span><span>Đang khởi động nguồn…</span>
+          </div>
+        </div>
+      </div>
+
+      <header class="topbar">
+        <div class="brand glass-dark" aria-hidden="true">
+          <span class="brand__mark"><svg class="icon"><use href="#i-flame"/></svg></span>
+          <span class="brand__text"><strong>Fire &amp; Smoke</strong><small>Vision Dashboard</small></span>
+        </div>
+        <div class="status-strip glass-dark" id="statusStrip" aria-live="polite" aria-atomic="false">
+          <span class="chip" id="chipState"><span class="dot" aria-hidden="true"></span><span id="chipStateText">Sẵn sàng</span></span>
+          <span class="chip chip--optional" title="Nguồn hiện tại"><svg class="icon"><use href="#i-image"/></svg><span id="chipSource">Chưa có nguồn</span></span>
+          <span class="chip"><svg class="icon"><use href="#i-cpu"/></svg><span id="chipModel">Đang tải model…</span></span>
+          <span class="chip"><span class="chip__label">FPS</span><b id="chipFps">—</b></span>
+          <span class="chip chip--optional"><span class="chip__label">Latency</span><b id="chipLatency">—</b></span>
+          <span class="chip"><span class="chip__label">Đối tượng</span><b id="chipObjects">0</b></span>
+        </div>
+      </header>
+
+      <div class="detection-badge glass-dark" id="detectionBadge" hidden>
+        <span class="detection-badge__label">Hiện tại</span>
+        <div class="detection-badge__pills" id="detectionPills"></div>
+      </div>
+
+      <div class="controls glass-dark" id="controls" role="toolbar" aria-label="Điều khiển nhận diện">
+        <button class="ctl ctl--primary" id="startBtn" type="button" title="Bật webcam máy chủ">
+          <svg class="icon"><use href="#i-camera"/></svg><span class="ctl__label">Bật webcam</span>
+        </button>
+        <button class="ctl" id="pauseBtn" type="button" disabled title="Tạm dừng nhận diện">
+          <svg class="icon"><use id="pauseIcon" href="#i-pause"/></svg><span class="ctl__label" id="pauseLabel">Tạm dừng</span>
+        </button>
+        <button class="ctl" id="stopBtn" type="button" disabled title="Dừng nguồn hiện tại">
+          <svg class="icon"><use href="#i-stop"/></svg><span class="ctl__label">Dừng</span>
+        </button>
+        <span class="ctl-divider" aria-hidden="true"></span>
+        <button class="ctl" id="shotBtn" type="button" disabled title="Tải ảnh chụp khung hình hiện tại">
+          <svg class="icon"><use href="#i-download"/></svg><span class="ctl__label">Ảnh chụp</span>
+        </button>
+        <button class="ctl" id="fsBtn" type="button" title="Bật/tắt toàn màn hình">
+          <svg class="icon"><use href="#i-expand"/></svg><span class="ctl__label" id="fsLabel">Toàn màn hình</span>
+        </button>
+      </div>
+    </main>
+
+    <button class="menu-button glass" id="menuBtn" type="button" aria-label="Mở menu" aria-expanded="false" aria-controls="drawer">
+      <svg class="icon"><use id="menuIcon" href="#i-menu"/></svg>
+    </button>
+
+    <div class="backdrop" id="backdrop" aria-hidden="true"></div>
+
+    <aside class="drawer glass-strong" id="drawer" aria-hidden="true" aria-label="Điều hướng chính">
+      <div class="drawer__head">
+        <div class="brand brand--ink">
+          <span class="brand__mark"><svg class="icon"><use href="#i-flame"/></svg></span>
+          <span class="brand__text"><strong>Fire &amp; Smoke</strong><small>Vision Dashboard</small></span>
+        </div>
+        <button class="icon-btn" id="drawerClose" type="button" aria-label="Đóng menu">
+          <svg class="icon"><use href="#i-close"/></svg>
+        </button>
+      </div>
+
+      <nav class="nav" aria-label="Khu vực chức năng">
+        <p class="nav__label">Không gian làm việc</p>
+        <button class="nav-item is-active" type="button" data-panel="live" aria-current="page">
+          <span class="nav-item__icon"><svg class="icon"><use href="#i-camera"/></svg></span>
+          <span class="nav-item__text"><strong>Live Detection</strong><small>Nhận diện toàn màn hình</small></span>
+          <span class="nav-item__live" aria-hidden="true"></span>
+        </button>
+        <button class="nav-item" type="button" data-panel="media">
+          <span class="nav-item__icon"><svg class="icon"><use href="#i-image"/></svg></span>
+          <span class="nav-item__text"><strong>Image / Video</strong><small>Tải ảnh hoặc video</small></span>
+          <svg class="icon nav-item__chevron"><use href="#i-chevron"/></svg>
+        </button>
+        <button class="nav-item" type="button" data-panel="history">
+          <span class="nav-item__icon"><svg class="icon"><use href="#i-history"/></svg></span>
+          <span class="nav-item__text"><strong>Detection History</strong><small>Sự kiện cảnh báo thật</small></span>
+          <svg class="icon nav-item__chevron"><use href="#i-chevron"/></svg>
+        </button>
+        <button class="nav-item" type="button" data-panel="analytics">
+          <span class="nav-item__icon"><svg class="icon"><use href="#i-chart"/></svg></span>
+          <span class="nav-item__text"><strong>Analytics</strong><small>Số liệu phiên hiện tại</small></span>
+          <svg class="icon nav-item__chevron"><use href="#i-chevron"/></svg>
+        </button>
+        <button class="nav-item" type="button" data-panel="alerts">
+          <span class="nav-item__icon"><svg class="icon"><use href="#i-bell"/></svg></span>
+          <span class="nav-item__text"><strong>Alerts</strong><small>Cảnh báo cháy / khói</small></span>
+          <span class="nav-count" id="alertsNavCount" hidden>0</span>
+        </button>
+
+        <p class="nav__label nav__label--spaced">Cấu hình</p>
+        <button class="nav-item" type="button" data-panel="yolo">
+          <span class="nav-item__icon"><svg class="icon"><use href="#i-sliders"/></svg></span>
+          <span class="nav-item__text"><strong>YOLO Settings</strong><small>Confidence, IoU, lớp</small></span>
+          <svg class="icon nav-item__chevron"><use href="#i-chevron"/></svg>
+        </button>
+        <button class="nav-item" type="button" data-panel="system">
+          <span class="nav-item__icon"><svg class="icon"><use href="#i-gear"/></svg></span>
+          <span class="nav-item__text"><strong>System Settings</strong><small>Camera, luồng, cảnh báo</small></span>
+          <svg class="icon nav-item__chevron"><use href="#i-chevron"/></svg>
+        </button>
+      </nav>
+
+      <div class="drawer__foot">
+        <div class="mini-card">
+          <div class="mini-card__head">
+            <svg class="icon"><use href="#i-cpu"/></svg>
+            <span>Model đang dùng</span>
+            <span class="pill pill--muted" id="drawerModelState">…</span>
+          </div>
+          <p class="mono" id="drawerWeights">best.pt</p>
+          <p class="mini-card__meta" id="drawerModelMeta">Đang đọc metadata…</p>
+        </div>
+        <p class="drawer__note">Dashboard không sửa, đổi tên hay train lại weights.</p>
+      </div>
+    </aside>
+
+    <section class="sheet glass-strong" id="sheet" role="dialog" aria-modal="false" aria-labelledby="sheetTitle" aria-hidden="true">
+      <header class="sheet__head">
+        <div class="sheet__heading">
+          <p class="eyebrow" id="sheetEyebrow">Không gian làm việc</p>
+          <h2 id="sheetTitle">Live Detection</h2>
+          <p class="sheet__subtitle" id="sheetSubtitle">Nhận diện trực tiếp từ nguồn đang chạy.</p>
+        </div>
+        <button class="icon-btn" id="sheetClose" type="button" aria-label="Đóng panel">
+          <svg class="icon"><use href="#i-close"/></svg>
+        </button>
+      </header>
+
+      <div class="sheet__body" id="sheetBody">
+        <!-- Media ----------------------------------------------------------- -->
+        <section class="sheet-section" data-panel="media" hidden>
+          <div class="card">
+            <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-describedby="dropHint">
+              <span class="dropzone__icon"><svg class="icon"><use href="#i-upload"/></svg></span>
+              <strong>Kéo thả hoặc chọn tệp</strong>
+              <span>Ảnh: JPG, PNG, BMP, WEBP · Video: MP4, AVI, MOV, MKV, WEBM</span>
+              <small>Ảnh tối đa 25 MB · Video tối đa 300 MB</small>
+              <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.bmp,.webp,.mp4,.avi,.mov,.mkv,.webm,image/*,video/*" hidden>
+            </div>
+
+            <div class="file-row" id="fileRow" hidden>
+              <span class="file-row__icon"><svg class="icon"><use id="fileIcon" href="#i-image"/></svg></span>
+              <span class="file-row__text"><strong id="fileName"></strong><small id="fileMeta"></small></span>
+              <button class="icon-btn icon-btn--small" id="clearFile" type="button" aria-label="Bỏ chọn tệp">
+                <svg class="icon"><use href="#i-close"/></svg>
+              </button>
+            </div>
+
+            <div class="btn-row">
+              <button class="btn btn--primary" id="processBtn" type="button" disabled>
+                <svg class="icon"><use href="#i-play"/></svg><span>Bắt đầu xử lý</span>
+              </button>
+            </div>
+            <p class="hint" id="dropHint">Tệp được lưu tạm để xử lý và tự động xoá khi dừng hoặc đổi nguồn. Không ghi lại dữ liệu nhận diện.</p>
+          </div>
+
+          <div class="card">
+            <div class="card__head"><h3>Webcam máy chủ</h3></div>
+            <p class="hint">Camera được mở trên máy chủ đang chạy dashboard. Nếu camera đang bị ứng dụng khác chiếm dụng, dashboard sẽ báo lỗi thay vì giả lập kết quả.</p>
+            <div class="btn-row">
+              <button class="btn btn--soft" id="mediaStartCam" type="button">
+                <svg class="icon"><use href="#i-camera"/></svg><span>Bật webcam</span>
+              </button>
+              <button class="btn btn--ghost" type="button" data-goto="system">
+                <svg class="icon"><use href="#i-gear"/></svg><span>Cấu hình camera</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- History --------------------------------------------------------- -->
+        <section class="sheet-section" data-panel="history" hidden>
+          <div class="toolbar">
+            <label class="select-inline" for="historyFilter">Lọc lớp
+              <select id="historyFilter"><option value="all">Tất cả</option></select>
+            </label>
+            <button class="btn btn--danger btn--small" id="clearHistoryBtn" type="button">
+              <svg class="icon"><use href="#i-trash"/></svg><span>Xoá lịch sử</span>
+            </button>
+          </div>
+          <ul class="event-list" id="historyList">
+            <li class="empty-row">Chưa có sự kiện cảnh báo.</li>
+          </ul>
+          <p class="hint">Mỗi sự kiện tương ứng một cảnh báo thật đã vượt cooldown, không phải dữ liệu mẫu.</p>
+        </section>
+
+        <!-- Analytics ------------------------------------------------------- -->
+        <section class="sheet-section" data-panel="analytics" hidden>
+          <div class="stat-grid">
+            <div class="stat"><span>Frame đã xử lý</span><strong id="anFrames">0</strong></div>
+            <div class="stat"><span>Tổng đối tượng</span><strong id="anDetections">0</strong></div>
+            <div class="stat"><span>Confidence TB</span><strong id="anConfidence">—</strong></div>
+            <div class="stat"><span>Cảnh báo</span><strong id="anAlerts">0</strong></div>
+            <div class="stat"><span>Thời lượng phiên</span><strong id="anUptime">—</strong></div>
+            <div class="stat"><span>Đối tượng / phút</span><strong id="anRate">—</strong></div>
+          </div>
+
+          <div class="card">
+            <div class="card__head"><h3>Phân bố theo lớp</h3><span class="pill pill--muted" id="anSession">Phiên hiện tại</span></div>
+            <div class="bars" id="classBars"><p class="empty-row">Chưa có dữ liệu.</p></div>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn btn--ghost btn--small" id="analyticsRefresh" type="button">
+              <svg class="icon"><use href="#i-refresh"/></svg><span>Làm mới</span>
+            </button>
+          </div>
+          <p class="hint">Số liệu chỉ tính từ các frame đã qua inference trong phiên chạy hiện tại; khởi động lại máy chủ sẽ bắt đầu phiên mới.</p>
+        </section>
+
+        <!-- Alerts ---------------------------------------------------------- -->
+        <section class="sheet-section" data-panel="alerts" hidden>
+          <div class="card alert-active" id="activeAlertCard" hidden>
+            <div class="card__head">
+              <h3><svg class="icon"><use href="#i-alert"/></svg> Đang phát hiện</h3>
+              <span class="pill pill--danger">Live</span>
+            </div>
+            <div class="pills" id="activeAlertPills"></div>
+          </div>
+
+          <div class="card">
+            <div class="card__head">
+              <h3>Âm thanh cảnh báo</h3>
+              <label class="switch">
+                <span class="sr-only">Bật âm thanh cảnh báo</span>
+                <input type="checkbox" id="soundToggle">
+                <span class="switch__track" aria-hidden="true"></span>
+              </label>
+            </div>
+            <p class="hint">Âm thanh dùng WebAudio trên trình duyệt; cần bật sau một thao tác người dùng. Không có tệp âm thanh bên ngoài.</p>
+          </div>
+
+          <div class="card">
+            <div class="card__head">
+              <h3>Cảnh báo gần đây</h3>
+              <button class="link-btn" type="button" data-goto="system">Đổi cooldown</button>
+            </div>
+            <ul class="event-list" id="alertList">
+              <li class="empty-row">Chưa có cảnh báo.</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- YOLO settings --------------------------------------------------- -->
+        <section class="sheet-section" data-panel="yolo" hidden>
+          <div class="card model-card" id="modelCard">
+            <div class="card__head">
+              <h3>Model weights</h3>
+              <span class="pill" id="modelStatePill">Đang tải…</span>
+            </div>
+            <p class="mono model-card__name" id="modelWeightsName">best.pt</p>
+            <div class="model-meta">
+              <span><b>Task</b><span id="modelTask">—</span></span>
+              <span><b>Classes</b><span id="modelClassesCount">—</span></span>
+              <span><b>Device</b><span id="modelDevice">—</span></span>
+            </div>
+            <div class="pills" id="modelClassPills"></div>
+            <p class="model-error" id="modelError" hidden></p>
+          </div>
+
+          <form class="form" id="yoloForm" novalidate>
+            <div class="field">
+              <div class="field__label"><label for="confRange">Confidence</label><output id="confValue" for="confRange">0.35</output></div>
+              <input type="range" id="confRange" min="0.01" max="0.99" step="0.01" value="0.35">
+              <p class="hint">Ngưỡng tin cậy tối thiểu để giữ một detection.</p>
+            </div>
+
+            <div class="field">
+              <div class="field__label"><label for="iouRange">IoU (NMS)</label><output id="iouValue" for="iouRange">0.45</output></div>
+              <input type="range" id="iouRange" min="0.01" max="0.99" step="0.01" value="0.45">
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="imgszSelect">Kích thước inference</label>
+                <select id="imgszSelect">
+                  <option value="320">320</option>
+                  <option value="416">416</option>
+                  <option value="480">480</option>
+                  <option value="640">640</option>
+                  <option value="800">800</option>
+                  <option value="960">960</option>
+                  <option value="1280">1280</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="maxDetInput">Max detections</label>
+                <input type="number" id="maxDetInput" min="1" max="300" step="1" value="100">
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="deviceSelect">Device</label>
+                <select id="deviceSelect">
+                  <option value="auto">auto</option>
+                  <option value="cpu">cpu</option>
+                  <option value="0">GPU 0</option>
+                  <option value="1">GPU 1</option>
+                </select>
+              </div>
+              <div class="field field--switch">
+                <span class="field__label"><span>Tracking</span></span>
+                <label class="switch">
+                  <span class="sr-only">Bật tracking ID</span>
+                  <input type="checkbox" id="trackingToggle">
+                  <span class="switch__track" aria-hidden="true"></span>
+                </label>
+                <p class="hint">ByteTrack, ID chỉ hiển thị khi có.</p>
+              </div>
+            </div>
+
+            <fieldset class="field field--fieldset">
+              <legend>Lớp nhận diện</legend>
+              <div class="check-grid" id="inferenceClasses"></div>
+              <p class="hint">Bỏ chọn để giới hạn inference. Bỏ trống hoàn toàn là không hợp lệ.</p>
+            </fieldset>
+
+            <div class="btn-row">
+              <button class="btn btn--primary" type="submit" id="saveYolo">
+                <svg class="icon"><use href="#i-check"/></svg><span>Lưu cài đặt</span>
+              </button>
+              <button class="btn btn--ghost" type="button" id="resetYolo">
+                <svg class="icon"><use href="#i-refresh"/></svg><span>Mặc định</span>
+              </button>
+            </div>
+            <p class="hint">Thay đổi được áp dụng cho frame tiếp theo, không nạp lại model và không dừng camera.</p>
+          </form>
+        </section>
+
+        <!-- System settings ------------------------------------------------- -->
+        <section class="sheet-section" data-panel="system" hidden>
+          <form class="form" id="systemForm" novalidate>
+            <fieldset class="field field--fieldset">
+              <legend>Camera</legend>
+              <div class="field-row">
+                <div class="field">
+                  <label for="cameraIndex">Chỉ số camera</label>
+                  <input type="number" id="cameraIndex" min="0" max="16" step="1" value="0">
+                </div>
+                <div class="field">
+                  <label for="targetFps">FPS mục tiêu</label>
+                  <input type="number" id="targetFps" min="1" max="60" step="1" value="24">
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <label for="cameraWidth">Chiều rộng</label>
+                  <input type="number" id="cameraWidth" min="160" max="3840" step="1" value="1280">
+                </div>
+                <div class="field">
+                  <label for="cameraHeight">Chiều cao</label>
+                  <input type="number" id="cameraHeight" min="120" max="2160" step="1" value="720">
+                </div>
+              </div>
+              <label class="switch-row">
+                <span><strong>Gương ảnh</strong><small>Lật ngang trước khi inference và vẽ box.</small></span>
+                <span class="switch">
+                  <span class="sr-only">Bật gương ảnh</span>
+                  <input type="checkbox" id="mirrorToggle">
+                  <span class="switch__track" aria-hidden="true"></span>
+                </span>
+              </label>
+              <p class="hint">Chỉ số camera, độ phân giải và gương ảnh áp dụng từ lần bắt đầu nguồn tiếp theo.</p>
+            </fieldset>
+
+            <fieldset class="field field--fieldset">
+              <legend>Luồng &amp; cảnh báo</legend>
+              <div class="field">
+                <div class="field__label"><label for="qualityRange">Chất lượng JPEG</label><output id="qualityValue" for="qualityRange">82</output></div>
+                <input type="range" id="qualityRange" min="40" max="95" step="1" value="82">
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <label for="alertCooldown">Cooldown cảnh báo (giây)</label>
+                  <input type="number" id="alertCooldown" min="0" max="600" step="1" value="10">
+                </div>
+                <div class="field">
+                  <label for="maxHistory">Số sự kiện lưu</label>
+                  <input type="number" id="maxHistory" min="20" max="1000" step="10" value="200">
+                </div>
+              </div>
+              <fieldset class="field field--fieldset">
+                <legend>Lớp phát cảnh báo</legend>
+                <div class="check-grid" id="alertClasses"></div>
+              </fieldset>
+            </fieldset>
+
+            <div class="btn-row">
+              <button class="btn btn--primary" type="submit" id="saveSystem">
+                <svg class="icon"><use href="#i-check"/></svg><span>Lưu cài đặt</span>
+              </button>
+              <button class="btn btn--ghost" type="button" id="resetSystem">
+                <svg class="icon"><use href="#i-refresh"/></svg><span>Mặc định</span>
+              </button>
+            </div>
+          </form>
+
+          <div class="card">
+            <div class="card__head"><h3>Về dashboard</h3></div>
+            <div class="about-grid">
+              <span>Phiên bản</span><b id="aboutVersion">—</b>
+              <span>Weights</span><b id="aboutWeights">best.pt</b>
+              <span>Trạng thái weights</span><b id="aboutWeightsState">—</b>
+              <span>Model</span><b id="aboutModelState">—</b>
+            </div>
+            <p class="hint">Frame và sự kiện nhận diện chỉ nằm trong bộ nhớ. Ảnh/video tải lên được lưu tạm để xử lý và xoá khi dừng hoặc đổi nguồn.</p>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+    <dialog id="confirmDialog" aria-labelledby="confirmTitle">
+      <form method="dialog" class="confirm-card">
+        <h2 id="confirmTitle">Xác nhận</h2>
+        <p id="confirmText"></p>
+        <div class="btn-row btn-row--end">
+          <button class="btn btn--ghost" value="cancel" type="submit">Huỷ</button>
+          <button class="btn btn--danger" id="confirmOk" value="ok" type="submit">Xác nhận</button>
+        </div>
+      </form>
+    </dialog>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+</body>
+</html>

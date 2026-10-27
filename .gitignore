@@ -1,0 +1,19 @@
+# Môi trường Python cục bộ
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Model weights: không đưa vào version control
+*.pt
+*.onnx
+*.engine
+*.weights
+*.bt
+
+# Dữ liệu huấn luyện / output
+fire_smoke_dataset/runs/
+uploads/
+*.log

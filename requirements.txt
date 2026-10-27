@@ -1,0 +1,13 @@
+# Runtime backend
+ultralytics==8.4.184
+Flask>=3.0,<4
+opencv-python>=4.10
+numpy>=1.26
+Pillow>=10.0
+
+# ByteTrack cần cho tracking ID (ultralytics không tự cài khi YOLO_AUTOINSTALL=false)
+lap>=0.5.12
+
+# PyTorch: cài CPU wheel trước theo README nếu máy không có GPU.
+# torch>=2.9
+# torchvision>=0.24
